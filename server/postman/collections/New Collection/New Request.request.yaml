@@ -1,5 +1,19 @@
-$kind: http-request
-name: New Request
-url: ""
-method: GET
+﻿$kind: http-request
+name: Register User
+url: 'http://localhost:5000/api/auth/register'
+method: POST
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  mode: raw
+  raw: |-
+    {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "password": "password123"
+    }
+  options:
+    raw:
+      language: json
 order: 1783927307738

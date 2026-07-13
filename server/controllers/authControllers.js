@@ -1,5 +1,5 @@
-const User = require("./models/user");
-const bycrypt = require("bycryptjs");
+const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 const registerUser = async (req,res) =>{
     try{
@@ -21,18 +21,29 @@ const registerUser = async (req,res) =>{
                 message:"User already registered",
             });
         }
-        const salt = await bycrypt.genSalt(10);
-        const hashedPassword = await bycrypt.hash(password,salt);
 
-    // Create User
+        // generate salt
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password,salt);
+
+        console.log("original password:",password);
+        console.log("Hashed Password:",hashedPassword);
+
+        // Create User
         const user = await User.create({
             name,
             email,
-            hashedPassword,
+            password:hashedPassword,
         });
+        const userResponse = {
+            _id:user._id,
+            name:user.name,
+            email:user.email,
+            createdAt:user.createdAt,
+        };
         res.status(201).json({
             message:"user registered successfully",
-            User,
+            User : userResponse,
         });
     }
     catch(error){
